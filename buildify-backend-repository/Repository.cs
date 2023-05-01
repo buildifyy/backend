@@ -1,4 +1,5 @@
 ﻿using buildify_backend_models;
+using buildify_backend_models.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 
@@ -14,9 +15,9 @@ public class Repository: IRepository
         _databaseName = databaseName;
     }
 
-    public async Task<IEnumerable<SampleProduct>> RetrieveAllProducts()
+    public async Task<IEnumerable<Template>> RetrieveAllTemplates()
     {
-        var queryable = _client.GetDatabase(_databaseName).GetContainer("SampleContainer").GetItemLinqQueryable<SampleProduct>();
+        var queryable = _client.GetDatabase(_databaseName).GetContainer("Template").GetItemLinqQueryable<Template>();
         var iterator = queryable.Select(row => row).ToFeedIterator();
         return await iterator.ReadNextAsync();
     }
