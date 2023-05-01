@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IRepository>(InitializeCosmosClientInstanceAsync(builder.Configuration.GetSection("CosmosDB")).GetAwaiter().GetResult());
+builder.Services.AddSingleton<IRepository>(InitializeCosmosClientInstance(builder.Configuration.GetSection("CosmosDB")));
 
 var app = builder.Build();
 
@@ -28,12 +28,11 @@ app.MapControllers();
 
 app.Run();
 
-static async Task<Repository> InitializeCosmosClientInstanceAsync(IConfigurationSection configurationSection)
+static Repository InitializeCosmosClientInstance(IConfigurationSection configurationSection)
 {
     var databaseName = configurationSection["DatabaseName"];
-    var account = configurationSection["Account"];
-    var key = configurationSection["Key"];
-    var client = new CosmosClient(account, key);
+    var connectionString = configurationSection["ConnectionString"];
+    var client = new CosmosClient(connectionString: connectionString);
     var cosmosDbService = new Repository(client, databaseName);
     return cosmosDbService;
 }

@@ -16,7 +16,7 @@ public class Repository: IRepository
 
     public async Task<IEnumerable<SampleProduct>> RetrieveAllProducts()
     {
-        var queryable = _client.GetDatabase("SampleDB").GetContainer("SampleContainer").GetItemLinqQueryable<SampleProduct>();
+        var queryable = _client.GetDatabase(_databaseName).GetContainer("SampleContainer").GetItemLinqQueryable<SampleProduct>();
         var iterator = queryable.Select(row => row).ToFeedIterator();
         return await iterator.ReadNextAsync();
     }
