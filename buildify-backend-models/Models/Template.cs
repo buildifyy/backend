@@ -11,6 +11,12 @@ namespace buildify_backend_models.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("parentId")]
+        public string ParentId { get; set; }
+
+        [JsonProperty("hierarchyPath")]
+        public string HierarchyPath { get; set; }
+
         [JsonProperty("attributes")]
         public IList<TemplateAttribute> Attributes { get; set; }
 
