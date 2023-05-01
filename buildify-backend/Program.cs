@@ -1,4 +1,5 @@
 ﻿using buildify_backend_repository;
+using Microsoft.Azure.Cosmos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IRepository, Repository>();
+builder.Services.AddSingleton<IRepository>(InitializeCosmosClientInstanceAsync(builder.Configuration.GetSection("CosmosDB")).GetAwaiter().GetResult());
 
 var app = builder.Build();
 
@@ -27,3 +28,12 @@ app.MapControllers();
 
 app.Run();
 
+static async Task<Repository> InitializeCosmosClientInstanceAsync(IConfigurationSection configurationSection)
+{
+    var databaseName = configurationSection["DatabaseName"];
+    var account = configurationSection["Account"];
+    var key = configurationSection["Key"];
+    var client = new CosmosClient(account, key);
+    var cosmosDbService = new Repository(client, databaseName);
+    return cosmosDbService;
+}

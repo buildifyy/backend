@@ -6,19 +6,17 @@ namespace buildify_backend_repository;
 public class Repository: IRepository
 {
     private readonly CosmosClient _client;
-    private Container container
-    {
-        get => _client.GetDatabase("SampleDB").GetContainer("SampleContainer");
-    }
+    private readonly string _databaseName;
 
-    public Repository()
+    public Repository(CosmosClient client, string databaseName)
     {
-        _client = new CosmosClient(connectionString: "AccountEndpoint=https://buildify-db.documents.azure.com:443/;AccountKey=cpChf1wL8jHPuhLFIZdYhX9FUTavBkoC3PurQFeYxum5aPoc4RDg1SLnhn7ce0cQKVOPnsiVl6KPACDbWCYW3Q==;");
+        _client = client;
+        _databaseName = databaseName;
     }
 
     public async Task<IEnumerable<SampleProduct>> RetrieveAllProducts()
     {
-        var queryable = container.GetItemLinqQueryable<SampleProduct>();
+        var queryable = _client.GetDatabase("SampleDB").GetContainer("SampleContainer").GetItemLinqQueryable<SampleProduct>();
         var iterator = queryable.Select(row => row).ToFeedIterator();
         return await iterator.ReadNextAsync();
     }
