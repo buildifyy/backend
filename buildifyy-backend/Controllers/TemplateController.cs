@@ -1,10 +1,10 @@
-﻿using buildify_backend_models;
-using buildify_backend_models.Models;
-using buildify_backend_repository;
+﻿using buildifyy_backend_models;
+using buildifyy_backend_models.Models;
+using buildifyy_backend_repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 
-namespace buildify_backend.Controllers;
+namespace buildifyy_backend.Controllers;
 
 [ApiController]
 [Route("/templates")]

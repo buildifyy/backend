@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace buildify_backend_models.Models
+namespace buildifyy_backend_models.Models
 {
 	public class TemplateAttribute
 	{

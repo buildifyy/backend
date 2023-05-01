@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\buildify-backend-models\buildify-backend-models.csproj" />
+    <ProjectReference Include="..\buildifyy-backend-models\buildifyy-backend-models.csproj" />
   </ItemGroup>
 </Project>

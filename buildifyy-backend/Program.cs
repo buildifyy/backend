@@ -1,4 +1,4 @@
-﻿using buildify_backend_repository;
+﻿using buildifyy_backend_repository;
 using Microsoft.Azure.Cosmos;
 
 var builder = WebApplication.CreateBuilder(args);

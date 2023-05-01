@@ -1,8 +1,8 @@
 ﻿using System;
-using buildify_backend_models;
-using buildify_backend_models.Models;
+using buildifyy_backend_models;
+using buildifyy_backend_models.Models;
 
-namespace buildify_backend_repository
+namespace buildifyy_backend_repository
 {
 	public interface IRepository
 	{

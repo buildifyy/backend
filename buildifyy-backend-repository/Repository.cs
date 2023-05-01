@@ -1,9 +1,9 @@
-﻿using buildify_backend_models;
-using buildify_backend_models.Models;
+﻿using buildifyy_backend_models;
+using buildifyy_backend_models.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 
-namespace buildify_backend_repository;
+namespace buildifyy_backend_repository;
 public class Repository: IRepository
 {
     private readonly CosmosClient _client;

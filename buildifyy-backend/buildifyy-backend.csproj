@@ -19,5 +19,11 @@
     <ProjectReference Include="..\buildify-backend-models\buildify-backend-models.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\buildifyy-backend-repository\buildifyy-backend-repository.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\buildifyy-backend-models\buildifyy-backend-models.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>
