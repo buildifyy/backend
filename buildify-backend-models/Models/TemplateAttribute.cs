@@ -13,6 +13,9 @@ namespace buildify_backend_models.Models
 
         [JsonProperty("dataType")]
         public string DataType { get; set; }
+
+        [JsonProperty("isRequired")]
+        public bool IsRequired { get; set; }
     }
 }
 
