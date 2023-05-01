@@ -13,6 +13,9 @@ namespace buildify_backend_models.Models
 
         [JsonProperty("attributes")]
         public IList<TemplateAttribute> Attributes { get; set; }
+
+        [JsonProperty("relationships")]
+        public IList<TemplateRelationship> Relationships { get; set; }
     }
 }
 
