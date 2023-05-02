@@ -1,4 +1,5 @@
-﻿using buildifyy_backend_models;
+﻿using buildify_backend_models.Models;
+using buildifyy_backend_models;
 using buildifyy_backend_models.Models;
 using buildifyy_backend_repository;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,15 @@ public class TemplateController : ControllerBase
     }
 
     [HttpGet(Name = "GetTemplates")]
-    public async Task<IEnumerable<Template>> GetTemplates()
+    public async Task<IEnumerable<Template>> GetTemplates([FromQuery]string? parentId)
     {
-        return await _repository.RetrieveAllTemplates();
+        return await _repository.RetrieveAllTemplates(parentId);
+    }
+
+    [HttpPost(Name = "CreateTemplate")]
+    public async Task CreateTemplate(CreateTemplateDTO templateToCreate)
+    {
+        await _repository.CreateTemplate(templateToCreate);
     }
 }
 

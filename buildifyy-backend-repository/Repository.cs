@@ -1,4 +1,5 @@
-﻿using buildifyy_backend_models;
+﻿using buildify_backend_models.Models;
+using buildifyy_backend_models;
 using buildifyy_backend_models.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
@@ -15,11 +16,98 @@ public class Repository: IRepository
         _databaseName = databaseName;
     }
 
-    public async Task<IEnumerable<Template>> RetrieveAllTemplates()
+    public async Task CreateTemplate(CreateTemplateDTO templateToCreate)
     {
-        var queryable = _client.GetDatabase(_databaseName).GetContainer("Template").GetItemLinqQueryable<Template>();
-        var iterator = queryable.Select(row => row).ToFeedIterator();
-        return await iterator.ReadNextAsync();
+        var templateContainer = _client.GetContainer(_databaseName, "Template");
+        var parentTemplateResponse = await templateContainer.ReadItemAsync<Template>(templateToCreate.ParentId, new PartitionKey(templateToCreate.ParentId));
+        var parentTemplate = parentTemplateResponse.Resource;
+        var hierarchyPath = string.Empty;   
+        if (string.IsNullOrEmpty(parentTemplate.HierarchyPath))
+        {
+            hierarchyPath = $"{templateToCreate.ParentId}$";
+        } else
+        {
+            hierarchyPath = $"{parentTemplate.HierarchyPath}{templateToCreate.ParentId}$";
+        }
+        var templateAttributesToCreate = parentTemplate.Attributes;
+        foreach(var attribute in templateToCreate.Attributes)
+        {
+            templateAttributesToCreate.Add(new TemplateAttribute
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = attribute.Name,
+                DataType = attribute.DataType,
+                IsRequired = attribute.IsRequired
+            });
+        }
+        var templateRelationshipsToCreate = parentTemplate.Relationships;
+        foreach (var relationship in templateToCreate.Relationships)
+        {
+            templateRelationshipsToCreate.Add(new TemplateRelationship
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = relationship.Name,
+                ReverseName = relationship.ReverseName,
+                Domain = relationship.Domain,
+                Range = relationship.Range
+            });
+        }
+        var template = new Template
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = templateToCreate.Name,
+            ParentId = templateToCreate.ParentId,
+            HierarchyPath = hierarchyPath,
+            Attributes = templateAttributesToCreate,
+            Relationships = templateRelationshipsToCreate
+        };
+        await templateContainer.CreateItemAsync(template);
+    }
+
+    public async Task<IEnumerable<Template>> GetChildTemplates(string parentId)
+    {
+        var queryable = _client.GetContainer(_databaseName, "Template").GetItemLinqQueryable<Template>();
+        var feed = queryable.Where(q => q.HierarchyPath.Contains($"{parentId}$")).ToFeedIterator();
+
+        List<Template> results = new();
+
+        while (feed.HasMoreResults)
+        {
+            var response = await feed.ReadNextAsync();
+            foreach(var template in response)
+            {
+                results.Add(template);
+            }
+        }
+
+        return results;
+    }
+
+    public async Task<IEnumerable<Template>> RetrieveAllTemplates(string? parentId)
+    {
+        var queryable = _client.GetContainer(_databaseName, "Template").GetItemLinqQueryable<Template>();
+
+        FeedIterator<Template> feed;
+        if (string.IsNullOrEmpty(parentId))
+        {
+            feed = queryable.Select(row => row).ToFeedIterator();
+        }
+        else
+        {
+            feed = queryable.Where(q => q.HierarchyPath.Contains($"{parentId}$")).ToFeedIterator();
+        }
+
+        List<Template> results = new();
+
+        while (feed.HasMoreResults)
+        {
+            var response = await feed.ReadNextAsync();
+            foreach(var template in response)
+            {
+                results.Add(template);
+            }
+        }
+        return results;
     }
 }
 
