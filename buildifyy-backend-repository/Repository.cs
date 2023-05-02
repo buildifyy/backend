@@ -109,5 +109,14 @@ public class Repository: IRepository
         }
         return results;
     }
+
+    public async Task<Template> RetrieveTemplate(string templateId)
+    {
+        var templateContainer = _client.GetContainer(_databaseName, "Template");
+        var parentTemplateResponse = await templateContainer.ReadItemAsync<Template>(templateId, new PartitionKey(templateId));
+        var parentTemplate = parentTemplateResponse.Resource;
+
+        return parentTemplate;
+    }
 }
 

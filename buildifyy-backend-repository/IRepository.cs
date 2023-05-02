@@ -8,6 +8,7 @@ namespace buildifyy_backend_repository
 	public interface IRepository
 	{
         Task<IEnumerable<Template>> RetrieveAllTemplates(string? parentId);
+        Task<Template> RetrieveTemplate(string templateId);
         Task CreateTemplate(CreateTemplateDTO templateToCreate);
         Task<IEnumerable<Template>> GetChildTemplates(string parentId);
     }		

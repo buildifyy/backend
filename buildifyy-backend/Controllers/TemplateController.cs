@@ -21,13 +21,19 @@ public class TemplateController : ControllerBase
     }
 
     [HttpGet(Name = "GetTemplates")]
-    public async Task<IEnumerable<Template>> GetTemplates([FromQuery]string? parentId)
+    public async Task<IEnumerable<Template>> GetTemplates([FromQuery] string? parentId)
     {
         return await _repository.RetrieveAllTemplates(parentId);
     }
 
+    [HttpGet("{templateId}", Name = "GetTemplate")]
+    public async Task<Template> GetTemplate([FromRoute] string templateId)
+    {
+        return await _repository.RetrieveTemplate(templateId);
+    }
+
     [HttpPost(Name = "CreateTemplate")]
-    public async Task CreateTemplate(CreateTemplateDTO templateToCreate)
+    public async Task CreateTemplate([FromBody] CreateTemplateDTO templateToCreate)
     {
         await _repository.CreateTemplate(templateToCreate);
     }
