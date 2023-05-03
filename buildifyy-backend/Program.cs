@@ -1,4 +1,5 @@
 ﻿using buildifyy_backend_repository;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Cosmos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddSingleton<IRepository>(InitializeCosmosClientInstance(builder.Configuration.GetSection("CosmosDB")));
 
