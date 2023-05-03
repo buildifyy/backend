@@ -21,15 +21,6 @@ public class Repository : IRepository
         var templateContainer = _client.GetContainer(_databaseName, "Template");
         var parentTemplateResponse = await templateContainer.ReadItemAsync<Template>(templateToCreate.ParentId, new PartitionKey(templateToCreate.ParentId));
         var parentTemplate = parentTemplateResponse.Resource;
-        var hierarchyPath = string.Empty;
-        if (string.IsNullOrEmpty(parentTemplate.HierarchyPath))
-        {
-            hierarchyPath = $"{templateToCreate.ParentId}$";
-        }
-        else
-        {
-            hierarchyPath = $"{parentTemplate.HierarchyPath}{templateToCreate.ParentId}$";
-        }
         var templateAttributesToCreate = parentTemplate.Attributes;
         foreach (var attribute in templateToCreate.Attributes)
         {
@@ -58,30 +49,10 @@ public class Repository : IRepository
             Id = Guid.NewGuid().ToString(),
             Name = templateToCreate.Name,
             ParentId = templateToCreate.ParentId,
-            HierarchyPath = hierarchyPath,
             Attributes = templateAttributesToCreate,
             Relationships = templateRelationshipsToCreate
         };
         await templateContainer.CreateItemAsync(template);
-    }
-
-    public async Task<IEnumerable<Template>> GetChildTemplates(string parentId)
-    {
-        var queryable = _client.GetContainer(_databaseName, "Template").GetItemLinqQueryable<Template>();
-        var feed = queryable.Where(q => q.HierarchyPath.Contains($"{parentId}$")).ToFeedIterator();
-
-        var results = new List<Template>();
-
-        while (feed.HasMoreResults)
-        {
-            var response = await feed.ReadNextAsync();
-            foreach (var template in response)
-            {
-                results.Add(template);
-            }
-        }
-
-        return results;
     }
 
     public async Task<List<TemplateTree>> GetTemplateTree()
@@ -146,7 +117,7 @@ public class Repository : IRepository
         }
         else
         {
-            feed = queryable.Where(q => q.HierarchyPath.Contains($"{parentId}$")).ToFeedIterator();
+            feed = queryable.Where(q => q.ParentId.Equals(parentId)).ToFeedIterator();
         }
 
         var results = new List<Template>();

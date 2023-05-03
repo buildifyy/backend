@@ -10,7 +10,6 @@ namespace buildifyy_backend_repository
         Task<IEnumerable<Template>> RetrieveAllTemplates(string? parentId);
         Task<Template> RetrieveTemplate(string templateId);
         Task CreateTemplate(CreateTemplateDTO templateToCreate);
-        Task<IEnumerable<Template>> GetChildTemplates(string parentId);
         Task<List<TemplateTree>> GetTemplateTree();
     }		
 }	
