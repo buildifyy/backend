@@ -37,5 +37,11 @@ public class TemplateController : ControllerBase
     {
         await _repository.CreateTemplate(templateToCreate);
     }
+
+    [HttpGet("tree", Name = "GetTemplateTree")]
+    public async Task<List<TemplateTree>> GetTemplateTree()
+    {
+        return await _repository.GetTemplateTree();
+    }
 }
 
