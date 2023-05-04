@@ -26,5 +26,8 @@
     <ProjectReference Include="..\buildifyy-backend-models\buildifyy-backend-models.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\buildifyy-backend-service\buildifyy-backend-service.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>

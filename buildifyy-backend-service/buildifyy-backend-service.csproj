@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>buildifyy_backend_service</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\buildifyy-backend-models\buildifyy-backend-models.csproj" />
+    <ProjectReference Include="..\buildifyy-backend-repository\buildifyy-backend-repository.csproj" />
+  </ItemGroup>
+</Project>

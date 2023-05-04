@@ -1,4 +1,5 @@
 ﻿using buildifyy_backend_repository;
+using buildifyy_backend_service;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Cosmos;
 
@@ -13,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddSingleton<IRepository>(InitializeCosmosClientInstance(builder.Configuration.GetSection("CosmosDB")));
+builder.Services.AddSingleton<IService, Service>();
 
 var app = builder.Build();
 

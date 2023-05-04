@@ -1,16 +1,15 @@
-﻿using System;
-using buildify_backend_models.Models;
-using buildifyy_backend_models;
-using buildifyy_backend_models.Models;
+﻿using buildifyy_backend_models.Models;
+using Microsoft.Azure.Cosmos;
 
 namespace buildifyy_backend_repository
 {
-	public interface IRepository
+    public interface IRepository
 	{
-        Task<IEnumerable<Template>> RetrieveAllTemplates(string? parentId);
-        Task<Template> RetrieveTemplate(string templateId);
-        Task CreateTemplate(CreateTemplateDTO templateToCreate);
-        Task<List<TemplateTree>> GetTemplateTree();
+        Task CreateItem<T>(T data);
+        Task<Template> GetTemplateById(string id);
+        FeedIterator<Template> GetRootTemplateFeed();
+        FeedIterator<Template> GetChildTemplateFeed(string id);
+        FeedIterator<Template> GetTemplatesFeed();
     }		
 }	
 

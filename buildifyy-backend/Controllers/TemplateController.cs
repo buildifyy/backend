@@ -1,9 +1,7 @@
 ﻿using buildify_backend_models.Models;
-using buildifyy_backend_models;
 using buildifyy_backend_models.Models;
-using buildifyy_backend_repository;
+using buildifyy_backend_service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
 
 namespace buildifyy_backend.Controllers;
 
@@ -11,41 +9,39 @@ namespace buildifyy_backend.Controllers;
 [Route("/templates")]
 public class TemplateController : ControllerBase
 {
-    private readonly ILogger<TemplateController> _logger;
-    private readonly IRepository _repository;
+    private readonly IService _service;
 
-    public TemplateController(ILogger<TemplateController> logger, IRepository repository)
+    public TemplateController(IService service)
     {
-        _logger = logger;
-        _repository = repository;
+        _service = service;
     }
 
     [HttpGet(Name = "GetTemplates")]
-    public async Task<IEnumerable<Template>> GetTemplates([FromQuery] string? parentId)
+    public async Task<object> GetTemplates([FromQuery] string? style)
     {
-        _logger.LogInformation("Received request to get all templates");
-        return await _repository.RetrieveAllTemplates(parentId);
+        if (string.IsNullOrEmpty(style) || !style.ToLowerInvariant().Equals("tree"))
+        {
+            return await _service.FetchTemplatesFlat();
+        }
+        return await _service.FetchTemplatesHierarchy();
     }
 
-    [HttpGet("{templateId}", Name = "GetTemplate")]
-    public async Task<Template> GetTemplate([FromRoute] string templateId)
+    [HttpGet("{templateId}", Name = "GetTemplateById")]
+    public async Task<Template> GetTemplateById([FromRoute] string templateId)
     {
-        _logger.LogInformation($"Received request to get template {templateId}");
-        return await _repository.RetrieveTemplate(templateId);
+        return await _service.FetchTemplate(templateId);
     }
 
     [HttpPost(Name = "CreateTemplate")]
     public async Task CreateTemplate([FromBody] CreateTemplateDTO templateToCreate)
     {
-        _logger.LogInformation($"Received request to create a new template {templateToCreate.Name}");
-        await _repository.CreateTemplate(templateToCreate);
+        await _service.CreateTemplate(templateToCreate);
     }
 
-    [HttpGet("tree", Name = "GetTemplateTree")]
-    public async Task<List<TemplateTree>> GetTemplateTree()
+    [HttpGet("{templateId}/children", Name = "GetTemplateChildren")]
+    public async Task<List<Template>> GetTemplateChildren([FromRoute] string templateId)
     {
-        _logger.LogInformation("Received request to get template tree");
-        return await _repository.GetTemplateTree();
+        return await _service.FetchTemplateChildren(templateId);
     }
 }
 
