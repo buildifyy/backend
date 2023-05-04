@@ -17,13 +17,13 @@ public class TemplateController : ControllerBase
     }
 
     [HttpGet(Name = "GetTemplates")]
-    public async Task<object> GetTemplates([FromQuery] string? style)
+    public async Task<object> GetTemplates([FromQuery] string? style, [FromQuery] int level = 2)
     {
         if (string.IsNullOrEmpty(style) || !style.ToLowerInvariant().Equals("tree"))
         {
             return await _service.FetchTemplatesFlat();
         }
-        return await _service.FetchTemplatesHierarchy();
+        return await _service.FetchTemplatesHierarchy(level);
     }
 
     [HttpGet("{templateId}", Name = "GetTemplateById")]

@@ -55,8 +55,9 @@ public class Service : IService
         await _repository.CreateItem(template);
     }
 
-    public async Task<List<TemplateTree>> FetchTemplatesHierarchy()
+    public async Task<List<TemplateTree>> FetchTemplatesHierarchy(int maxLevel)
     {
+        int innerLevel = 1;
         var rootTemplateFeed = _repository.GetRootTemplateFeed();
         var templateTrees = new List<TemplateTree>();
 
@@ -76,7 +77,7 @@ public class Service : IService
             {
                 Id = rootTemplate.Id,
                 Name = rootTemplate.Name,
-                Children = await FetchTemplateChildrenTree(rootTemplate.Id)
+                Children = await FetchTemplateChildrenTree(rootTemplate.Id, innerLevel, maxLevel)
             });
         }
 
@@ -120,9 +121,13 @@ public class Service : IService
         return childTemplates;
     }
 
-    private async Task<List<TemplateTree>> FetchTemplateChildrenTree(string id)
+    private async Task<List<TemplateTree>> FetchTemplateChildrenTree(string id, int innerLevel, int maxLevel)
     {
         var templates = new List<TemplateTree>();
+        if (innerLevel++ == maxLevel)
+        {
+            return templates;
+        }
         var feed = _repository.GetChildTemplateFeed(id);
 
         while (feed.HasMoreResults)
@@ -134,7 +139,7 @@ public class Service : IService
                 {
                     Id = template.Id,
                     Name = template.Name,
-                    Children = await FetchTemplateChildrenTree(template.Id)
+                    Children = await FetchTemplateChildrenTree(template.Id, innerLevel, maxLevel)
                 });
             }
         }
