@@ -12,10 +12,10 @@ namespace buildify_backend_models.Models
         public string ParentId { get; set; }
 
         [JsonProperty("attributes")]
-        public List<CreateAttributeDTO> Attributes { get; set; }
+        public List<CreateAttributeDTO>? Attributes { get; set; }
 
         [JsonProperty("relationships")]
-        public List<CreateRelationshipDTO> Relationships { get; set; }
+        public List<CreateRelationshipDTO>? Relationships { get; set; }
 	}
 }
 

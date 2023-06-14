@@ -20,8 +20,9 @@ public class Service : IService
         var parentTemplate = await _repository.GetTemplateById(createTemplateDTO.ParentId);
 
         var templateAttributesToCreate = parentTemplate.Attributes;
-        foreach (var attribute in createTemplateDTO.Attributes)
+        for (int i = 0; i < createTemplateDTO.Attributes?.Count; i++)
         {
+            CreateAttributeDTO? attribute = createTemplateDTO.Attributes[i];
             templateAttributesToCreate.Add(new TemplateAttribute
             {
                 Id = Guid.NewGuid().ToString(),
@@ -31,8 +32,9 @@ public class Service : IService
             });
         }
         var templateRelationshipsToCreate = parentTemplate.Relationships;
-        foreach (var relationship in createTemplateDTO.Relationships)
+        for (int i = 0; i < createTemplateDTO.Relationships?.Count; i++)
         {
+            CreateRelationshipDTO? relationship = createTemplateDTO.Relationships[i];
             templateRelationshipsToCreate.Add(new TemplateRelationship
             {
                 Id = Guid.NewGuid().ToString(),

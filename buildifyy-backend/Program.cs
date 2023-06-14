@@ -1,6 +1,5 @@
 ﻿using buildifyy_backend_repository;
 using buildifyy_backend_service;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Cosmos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +15,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "corsPolicy", policy =>
     {
         policy.WithOrigins("*");
+        policy.WithMethods("*");
+        policy.WithHeaders("*");
     });
 });
 builder.Services.AddApplicationInsightsTelemetry();
